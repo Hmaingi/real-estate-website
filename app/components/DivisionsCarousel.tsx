@@ -1,63 +1,69 @@
 'use client';
 
-import React from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay } from 'swiper/modules'; // ✅ import Autoplay
-import Link from 'next/link'; 
+import Link from 'next/link';
 
-import 'swiper/css';
-import 'swiper/css/pagination';
+type Division = {
+  title: string;
+  description: string;
+  image: string; // stored directly in /public
+  link: string;
+};
 
-const divisions = [
+const divisions: Division[] = [
   {
-    name: 'Legacy Agency',
-    description: 'Property buying, selling & letting services.',
-    image: '/rhouse.jpg',
-    slug: 'agency', // for link
+    title: 'Legacy Agency',
+    description: 'Connecting buyers and sellers with curated property listings.',
+    image: '/postsale.jpg',
+    link: '/divisions/agency',
   },
   {
-    name: 'Legacy Management',
-    description: 'Professional property management solutions.',
-    image: '/apartment.jpg',
-    slug: 'management',
+    title: 'Legacy Management',
+    description:
+      'Efficient property management for residential and commercial real estate.',
+    image: '/inspection.jpg',
+    link: '/divisions/management',
   },
   {
-    name: 'Legacy Developments',
-    description: 'Innovative property development & planning.',
+    title: 'Legacy Developments',
+    description:
+      'Planning and constructing future-forward property solutions.',
     image: '/estate.jpg',
-    slug: 'developments',
+    link: '/divisions/developments',
+  },
+  {
+    title: 'Legacy Capital',
+    description:
+      'Flexible real estate funding for developers and investors.',
+    image: '/hso.jpg',
+    link: '/divisions/capital',
   },
 ];
 
-const DivisionsCarousel = () => {
+export default function DivisionsCards() {
   return (
-    <Swiper
-      slidesPerView={1}
-      spaceBetween={30}
-      pagination={{ clickable: true }}
-      autoplay={{ delay: 4000, disableOnInteraction: false }} // ✅ autoplay
-      modules={[Pagination, Autoplay]} // ✅ add Autoplay here
-      className="w-full"
-    >
+    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
       {divisions.map((division, index) => (
-        <SwiperSlide key={index}>
-          <Link href={`/divisions/${division.slug}`}>
-            <div className="bg-white rounded-xl shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-300">
-              <img
-                src={division.image}
-                alt={division.name}
-                className="w-full h-64 object-cover"
-              />
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">{division.name}</h3>
-                <p className="text-gray-600">{division.description}</p>
-              </div>
-            </div>
-          </Link>
-        </SwiperSlide>
-      ))}
-    </Swiper>
-  );
-};
+        <Link
+          key={index}
+          href={division.link}
+          className="group bg-white border border-yellow-100 rounded-2xl shadow-lg overflow-hidden transition transform hover:-translate-y-1 hover:shadow-2xl"
+        >
+          {/* Image */}
+          <div className="h-48 w-full overflow-hidden">
+            <img
+              src={division.image}
+              alt={division.title}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          </div>
 
-export default DivisionsCarousel;
+          {/* Text */}
+          <div className="p-5">
+            <h3 className="text-lg font-semibold">{division.title}</h3>
+            <p className="text-gray-600 mt-2 text-sm">{division.description}</p>
+          </div>
+        </Link>
+      ))}
+    </div>
+  );
+}

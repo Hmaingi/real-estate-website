@@ -6,6 +6,10 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Link from "next/link";
 import DivisionsCarousel from "./components/DivisionsCarousel";
 import dynamic from "next/dynamic";
+import FeaturedProperties from './components/FeaturedProperties';
+import BlogSection from './components/BlogSection';
+import HeroCarousel from "./components/HeroCarousel";
+
 
 const PropertyMap = dynamic(() => import("./components/PropertyMap"), {
   ssr: false,
@@ -25,65 +29,15 @@ export default function HomePage() {
           {/* Nav Links */}
           <div className="space-x-6">
             <Link href="/" className="text-black hover:text-yellow-600">Home</Link>
-            <Link href="/divisions" className="text-black hover:text-yellow-600">Our Divisions</Link>
-            <Link href="/properties" className="text-black hover:text-yellow-600">Properties</Link>
-            <Link href="/contact" className="text-black hover:text-yellow-600">Contact</Link>
+            <a href="#our-divisions" className="text-black hover:text-yellow-600">Our Divisions</a>
+            <a href="#featured-properties" className="text-black hover:text-yellow-600">Properties</a>
+            <a href="#contact" className="text-black hover:text-yellow-600">Contact</a>
           </div>
         </div>
       </nav>
 
-      {/* HERO CAROUSEL */}
-      <div className="pt-[72px]"> {/* padding to offset fixed navbar */}
-        <Carousel
-          autoPlay
-          infiniteLoop
-          showThumbs={false}
-          showStatus={false}
-          interval={5000}
-        >
-          <div className="relative">
-            <img
-              src="/rhouse.jpg"
-              alt="Family buying a home"
-              className="w-full object-cover h-[300px] sm:h-[400px] md:h-[500px] lg:h-[calc(100vh-72px)]"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center items-center text-white p-6">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Find Your Dream Home</h2>
-              <p className="text-base sm:text-lg max-w-xl text-center">
-                Legacy connects you with the best properties in the market.
-              </p>
-            </div>
-          </div>
-
-          <div className="relative">
-            <img
-              src="/apartment.jpg"
-              alt="Commercial real estate"
-              className="w-full object-cover h-[300px] sm:h-[400px] md:h-[500px] lg:h-[calc(100vh-72px)]"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center items-center text-white p-6">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Commercial Spaces</h2>
-              <p className="text-base sm:text-lg max-w-xl text-center">
-                We help you find the perfect office, retail, or warehouse space.
-              </p>
-            </div>
-          </div>
-
-          <div className="relative">
-            <img
-              src="/estate.jpg"
-              alt="Land for sale"
-              className="w-full object-cover h-[300px] sm:h-[400px] md:h-[500px] lg:h-[calc(100vh-72px)]"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center items-center text-white p-6">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Prime Land</h2>
-              <p className="text-base sm:text-lg max-w-xl text-center">
-                Secure valuable plots for your next big project.
-              </p>
-            </div>
-          </div>
-        </Carousel>
-      </div>
+ {/* HERO CAROUSEL */}
+<HeroCarousel />
 
       {/* ABOUT SECTION */}
       <section className="bg-white py-16 px-6 text-center">
@@ -99,34 +53,77 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* OUR DIVISIONS */}
-      <section className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-8">Our Divisions</h2>
-          <DivisionsCarousel />
-        </div>
-      </section>
+     {/* OUR DIVISIONS SECTION */}
+<section id="our-divisions" className="py-20 bg-white">
+  <div className="max-w-6xl mx-auto px-4">
+    <h2 className="text-4xl font-bold text-center mb-8">Our Divisions</h2>
+    <DivisionsCarousel />
+  </div>
+</section>
 
-      {/* WHY CHOOSE US */}
-      <section className="py-16 px-6 bg-white">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-10 text-yellow-600">Why Choose Legacy</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { icon: "🏆", title: "Proven Track Record", description: "Years of experience delivering top-tier property solutions across Kenya." },
-              { icon: "🤝", title: "Client-First Approach", description: "We prioritize transparency, trust, and lasting relationships." },
-              { icon: "📍", title: "Strategic Locations", description: "Access prime properties in Nairobi, Mombasa, Kisumu, and beyond." },
-              { icon: "⚖️", title: "Legal Assurance", description: "Every listing verified with full title checks and legal support." }
-            ].map((item, index) => (
-              <div key={index} className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 shadow-sm hover:shadow-lg transition-shadow duration-200">
-                <div className="text-4xl mb-3">{item.icon}</div>
-                <h3 className="text-lg font-semibold text-black mb-1">{item.title}</h3>
-                <p className="text-sm text-gray-700">{item.description}</p>
-              </div>
-            ))}
-          </div>
+{/* FEATURED PROPERTIES SECTION */}
+        <section id="featured-properties" className="py-20 bg-gray-50">
+  <div className="max-w-6xl mx-auto px-4">
+    <h2 className="text-4xl font-bold text-center mb-8">Featured Properties</h2>
+    <FeaturedProperties />
+  </div>
+</section>
+
+{/* BLOG SECTION */}
+<section className="py-16 px-6 bg-white">
+  <div className="max-w-6xl mx-auto px-4">
+    <h2 className="text-4xl font-bold text-center mb-8">Latest Blog Posts</h2>
+    <BlogSection />
+  </div>
+</section>
+
+    {/* WHY CHOOSE US */}
+<section className="py-16 px-6 bg-gray-50">
+  <div className="max-w-6xl mx-auto text-center">
+    <h2 className="text-3xl md:text-4xl font-bold mb-10 text-gray-800">
+      Why Choose Legacy
+    </h2>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      {[
+        {
+          icon: "🏆",
+          title: "Proven Track Record",
+          description:
+            "Years of experience delivering top-tier property solutions across Kenya.",
+        },
+        {
+          icon: "🤝",
+          title: "Client-First Approach",
+          description:
+            "We prioritize transparency, trust, and lasting relationships.",
+        },
+        {
+          icon: "📍",
+          title: "Strategic Locations",
+          description:
+            "Access prime properties in Nairobi, Mombasa, Kisumu, and beyond.",
+        },
+        {
+          icon: "⚖️",
+          title: "Legal Assurance",
+          description:
+            "Every listing verified with full title checks and legal support.",
+        },
+      ].map((item, index) => (
+        <div
+          key={index}
+          className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow"
+        >
+          <div className="text-4xl mb-3">{item.icon}</div>
+          <h3 className="text-lg font-semibold text-gray-800 mb-1">
+            {item.title}
+          </h3>
+          <p className="text-sm text-gray-600">{item.description}</p>
         </div>
-      </section>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* MAP SECTION */}
       <section className="py-16 px-6 bg-gray-50">
@@ -136,57 +133,93 @@ export default function HomePage() {
           <PropertyMap />
         </div>
       </section>
-
-      {/* TESTIMONIALS */}
-      <section className="py-16 px-6 bg-gray-50">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-10 text-yellow-600">What Our Clients Say</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { name: "Jane M.", quote: "Legacy helped me buy my first home — smooth, professional, and honest service!" },
-              { name: "Samuel K.", quote: "They handled our rentals with total efficiency. Highly recommend Legacy Management." },
-              { name: "Amina W.", quote: "I got legal support and land purchase guidance that saved me big time!" }
-            ].map((testimony, index) => (
-              <div key={index} className="bg-white rounded-xl shadow-md p-6 border border-yellow-100">
-                <p className="text-gray-700 italic">“{testimony.quote}”</p>
-                <p className="mt-4 font-semibold text-black">— {testimony.name}</p>
-              </div>
-            ))}
-          </div>
+{/* TESTIMONIALS */}
+<section className="py-16 px-6 bg-white">
+  <div className="max-w-6xl mx-auto text-center">
+    <h2 className="text-3xl md:text-4xl font-bold mb-10 text-yellow-600">
+      What Our Clients Say
+    </h2>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {[
+        { name: "Jane M.", quote: "Legacy helped me buy my first home — smooth, professional, and honest service!" },
+        { name: "Samuel K.", quote: "They handled our rentals with total efficiency. Highly recommend Legacy Management." },
+        { name: "Amina W.", quote: "I got legal support and land purchase guidance that saved me big time!" }
+      ].map((testimony, index) => (
+        <div
+          key={index}
+          className="bg-white border border-yellow-200 rounded-xl p-6 shadow-sm hover:shadow-lg transition-shadow duration-200"
+        >
+          <p className="text-gray-700 italic">“{testimony.quote}”</p>
+          <p className="mt-4 font-semibold text-black">— {testimony.name}</p>
         </div>
-      </section>
+      ))}
+    </div>
+  </div>
+</section>
 
-      {/* FEATURED PROPERTIES */}
-      <section className="py-16 px-6 bg-white">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-10 text-yellow-600">Featured Properties</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((num) => (
-              <div key={num} className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
-                <div className="bg-gray-300 h-48 w-full"></div>
-                <div className="p-4 text-left">
-                  <h3 className="text-lg font-semibold text-black mb-1">Property Title {num}</h3>
-                  <p className="text-sm text-gray-600">Ksh 8.5M · 3 Bed · Kileleshwa</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+{/* NEWSLETTER */}
+<section className="py-16 px-6 bg-white">
+  <div className="max-w-2xl mx-auto text-center bg-white border border-yellow-200 rounded-xl p-8 shadow-sm">
+    <h2 className="text-3xl md:text-4xl font-bold text-yellow-600 mb-4">
+      Stay Updated
+    </h2>
+    <p className="text-gray-700 mb-6">
+      Subscribe to get the latest listings, market tips, and Legacy updates.
+    </p>
+    <form className="flex flex-col sm:flex-row gap-4 justify-center">
+      <input
+        type="email"
+        placeholder="Enter your email"
+        className="px-4 py-2 rounded-md border border-yellow-200 focus:outline-none w-full sm:w-auto"
+      />
+      <button
+        type="submit"
+        className="bg-yellow-500 text-white font-semibold px-6 py-2 rounded-md hover:bg-yellow-600 transition"
+      >
+        Subscribe
+      </button>
+    </form>
+  </div>
+</section>
 
-      {/* NEWSLETTER */}
-      <section className="py-16 px-6 bg-yellow-100">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">Stay Updated</h2>
-          <p className="text-gray-700 mb-6">Subscribe to get the latest listings, market tips, and Legacy updates.</p>
-          <form className="flex flex-col sm:flex-row gap-4 justify-center">
-            <input type="email" placeholder="Enter your email" className="px-4 py-2 rounded-md border border-gray-300 focus:outline-none w-full sm:w-auto" />
-            <button type="submit" className="bg-yellow-500 text-white font-semibold px-6 py-2 rounded-md hover:bg-yellow-600 transition">
-              Subscribe
-            </button>
-          </form>
-        </div>
-      </section>
+{/* CONTACT CTA */}
+<section id="contact" className="py-20 bg-yellow-100">
+  <div className="max-w-3xl mx-auto px-6">
+    <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 text-black">
+      Get in Touch
+    </h2>
+    <p className="text-center text-gray-700 mb-10">
+      Have questions or want to list a property? Send us a message and we'll get back to you!
+    </p>
+
+    <form className="grid gap-6">
+      <input
+        type="text"
+        placeholder="Your Name"
+        className="px-4 py-3 rounded-md border border-gray-300 focus:outline-none w-full"
+      />
+      <input
+        type="email"
+        placeholder="Your Email"
+        className="px-4 py-3 rounded-md border border-gray-300 focus:outline-none w-full"
+      />
+      <textarea
+        placeholder="Your Message"
+        rows={5}
+        className="px-4 py-3 rounded-md border border-gray-300 focus:outline-none w-full"
+      ></textarea>
+      <button
+        type="submit"
+        className="bg-black text-white font-semibold px-6 py-3 rounded-md hover:bg-yellow-600 transition"
+      >
+        Send Message
+      </button>
+    </form>
+  </div>
+</section>
+
+import Footer from '@/components/Footer';
+
 
       {/* Scoped styles restored + responsive overrides for carousel lib */}
       <style jsx scoped>{`

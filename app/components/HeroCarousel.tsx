@@ -38,20 +38,20 @@ export default function HeroCarousel() {
     <Swiper
       modules={[Autoplay, Pagination, Navigation]}
       slidesPerView={1}
-      loop={true}
+      loop
       autoplay={{ delay: 4000, disableOnInteraction: false }}
       pagination={{ clickable: true }}
       navigation
-      className="w-full h-[90vh]"
+      className="w-full h-[90vh]" // Fix height for hero
     >
       {slides.map((slide, index) => (
-        <SwiperSlide key={index}>
-          <a href={slide.link} className="block relative w-full h-full">
+        <SwiperSlide key={index} className="relative h-[90vh]">
+          <a href={slide.link} className="block w-full h-full relative overflow-hidden">
             {/* Background Image */}
             <img
               src={slide.image}
               alt={slide.title}
-              className="w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover"
             />
 
             {/* Dark Overlay */}
