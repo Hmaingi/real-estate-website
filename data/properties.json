@@ -1,0 +1,104 @@
+[
+  {
+    "id": 1,
+    "title": "Luxury Villa in Karen",
+    "location": "Karen, Nairobi",
+    "price": "KES 250,000/month",
+    "numericPrice": 250000,
+    "type": "Rent",
+    "bedrooms": 4,
+    "bathrooms": 3,
+    "area": "450 sqm",
+    "images": [
+      "https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "https://images.pexels.com/photos/1643389/pexels-photo-1643389.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "https://images.pexels.com/photos/2581922/pexels-photo-2581922.jpeg?auto=compress&cs=tinysrgb&w=800"
+    ],
+    "description": "Spacious villa with a pool, garden, and modern kitchen. This stunning property features high-end finishes, panoramic views, and is located in one of Nairobi's most prestigious neighborhoods."
+  },
+  {
+    "id": 2,
+    "title": "Modern Apartment in Westlands",
+    "location": "Westlands, Nairobi",
+    "price": "KES 85,000/month",
+    "numericPrice": 85000,
+    "type": "Rent",
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "area": "120 sqm",
+    "images": [
+      "https://images.pexels.com/photos/271816/pexels-photo-271816.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "https://images.pexels.com/photos/2291599/pexels-photo-2291599.jpeg?auto=compress&cs=tinysrgb&w=800"
+    ],
+    "description": "Contemporary apartment with city views, modern appliances, and access to gym and swimming pool facilities. Perfect for young professionals."
+  },
+  {
+    "id": 3,
+    "title": "Executive Townhouse in Lavington",
+    "location": "Lavington, Nairobi",
+    "price": "KES 45,000,000",
+    "numericPrice": 45000000,
+    "type": "Sale",
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "area": "200 sqm",
+    "images": [
+      "https://images.pexels.com/photos/259588/pexels-photo-259588.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "https://images.pexels.com/photos/2102587/pexels-photo-2102587.jpeg?auto=compress&cs=tinysrgb&w=800"
+    ],
+    "description": "Beautiful townhouse with private garden, garage, and modern amenities. Located in a secure, family-friendly neighborhood."
+  },
+  {
+    "id": 4,
+    "title": "Penthouse Suite in Kilimani",
+    "location": "Kilimani, Nairobi",
+    "price": "KES 180,000/month",
+    "numericPrice": 180000,
+    "type": "Rent",
+    "bedrooms": 3,
+    "bathrooms": 3,
+    "area": "280 sqm",
+    "images": [
+      "https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "https://images.pexels.com/photos/1571453/pexels-photo-1571453.jpeg?auto=compress&cs=tinysrgb&w=800"
+    ],
+    "description": "Luxury penthouse with panoramic city views, rooftop terrace, and premium finishes throughout. The epitome of urban living."
+  },
+  {
+    "id": 5,
+    "title": "Family Home in Runda",
+    "location": "Runda, Nairobi",
+    "price": "KES 75,000,000",
+    "numericPrice": 75000000,
+    "type": "Sale",
+    "bedrooms": 5,
+    "bathrooms": 4,
+    "area": "600 sqm",
+    "images": [
+      "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "https://images.pexels.com/photos/1396127/pexels-photo-1396127.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "https://images.pexels.com/photos/1643384/pexels-photo-1643384.jpeg?auto=compress&cs=tinysrgb&w=800"
+    ],
+    "description": "Spacious family home with large garden, swimming pool, and staff quarters. Perfect for large families seeking luxury and privacy."
+  },
+  {
+    "id": 6,
+    "title": "Studio Apartment in CBD",
+    "location": "CBD, Nairobi",
+    "price": "KES 45,000/month",
+    "numericPrice": 45000,
+    "type": "Rent",
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "area": "45 sqm",
+    "images": [
+      "https://images.pexels.com/photos/1571468/pexels-photo-1571468.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "https://images.pexels.com/photos/2251247/pexels-photo-2251247.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "https://images.pexels.com/photos/2199293/pexels-photo-2199293.jpeg?auto=compress&cs=tinysrgb&w=800"
+    ],
+    "description": "Compact yet stylish studio apartment in the heart of the city. Perfect for young professionals who want to be close to everything."
+  }
+]
