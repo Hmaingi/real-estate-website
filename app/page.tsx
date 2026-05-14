@@ -1,29 +1,14 @@
 "use client";
-import { useRouter } from 'next/navigation';
-import SearchBar, { SearchFilters } from '@/components/SearchBar';
-import { ArrowRight, Award, Users, Home, Star } from 'lucide-react';
+import { ArrowRight, Award, Users, Home, Star, KeyRound } from 'lucide-react';
 import Link from 'next/link';
+import BrandWordmark from '@/components/BrandWordmark';
 
 export default function HomePage() {
-  const router = useRouter();
-
-  const handleSearch = (filters: SearchFilters) => {
-    const params = new URLSearchParams();
-    
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value) {
-        params.set(key, value);
-      }
-    });
-
-    router.push(`/listings?${params.toString()}`);
-  };
-
   const stats = [
-    { icon: Home, value: '500+', label: 'Properties Listed' },
-    { icon: Users, value: '1,000+', label: 'Happy Clients' },
-    { icon: Award, value: '15+', label: 'Years Experience' },
-    { icon: Star, value: '4.9', label: 'Client Rating' }
+    { icon: Home, value: '250+', label: 'Properties Listed' },
+    { icon: Users, value: '300+', label: 'Happy Clients' },
+    { icon: Award, value: '3+', label: 'Years Experience' },
+    { icon: Star, value: '3.5', label: 'Client Rating' }
   ];
 
   return (
@@ -46,31 +31,30 @@ export default function HomePage() {
         {/* Hero Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight">
               Find Your
-              <span className="text-amber-500 block">Dream Home</span>
+              <span className="text-emerald-400 block">Dream Home</span>
             </h1>
-            <p className="text-xl md:text-2xl text-slate-200 mb-12 max-w-2xl mx-auto">
-              Discover luxury properties, modern apartments, and exclusive homes 
-              in Nairobi's most prestigious neighborhoods.
-            </p>
 
-            {/* Search Bar */}
-            <div className="max-w-4xl mx-auto">
-              <SearchBar 
-                onSearch={handleSearch}
-                className="transform hover:scale-105 transition-transform duration-300"
-              />
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/buy"
+                className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors text-lg"
+              >
+                <Home className="h-5 w-5" />
+                <span>Buy a Home</span>
+              </Link>
+              <Link
+                href="/listings?type=Rent"
+                className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-100 text-slate-950 font-semibold px-8 py-4 rounded-lg transition-colors text-lg"
+              >
+                <KeyRound className="h-5 w-5" />
+                <span>Rent a Home</span>
+              </Link>
             </div>
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white/50 rounded-full mt-2"></div>
-          </div>
-        </div>
       </section>
 
       {/* Stats Section */}
@@ -79,7 +63,7 @@ export default function HomePage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="bg-amber-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="bg-emerald-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                   <stat.icon className="h-8 w-8 text-white" />
                 </div>
                 <div className="text-3xl lg:text-4xl font-bold text-slate-800 mb-2">
@@ -109,7 +93,7 @@ export default function HomePage() {
           <div className="text-center">
             <Link
               href="/listings"
-              className="inline-flex items-center space-x-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold px-8 py-4 rounded-lg transition-colors text-lg"
+              className="inline-flex items-center space-x-2 bg-slate-950 hover:bg-slate-800 text-white font-semibold px-8 py-4 rounded-lg transition-colors text-lg"
             >
               <span>View All Properties</span>
               <ArrowRight className="h-5 w-5" />
@@ -123,7 +107,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-              Why Choose Graceful Properties?
+              Why Choose <BrandWordmark className="text-5xl lg:text-6xl text-white align-middle" />?
             </h2>
             <p className="text-xl text-slate-300 max-w-2xl mx-auto">
               We provide exceptional service and expertise to help you find the perfect property.
@@ -132,7 +116,7 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div className="text-center">
-              <div className="bg-amber-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="bg-emerald-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Award className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-2xl font-semibold mb-4">Premium Service</h3>
@@ -142,22 +126,22 @@ export default function HomePage() {
             </div>
 
             <div className="text-center">
-              <div className="bg-amber-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="bg-emerald-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Users className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-2xl font-semibold mb-4">Expert Knowledge</h3>
               <p className="text-slate-300">
-                With over 15 years of experience, we have deep knowledge of Nairobi's real estate market.
+                With over 3 years of experience, we help clients understand the market clearly before they commit.
               </p>
             </div>
 
             <div className="text-center">
-              <div className="bg-amber-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="bg-emerald-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Star className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-2xl font-semibold mb-4">Trusted Partner</h3>
               <p className="text-slate-300">
-                Over 1,000 satisfied clients trust us to find their dream homes and investment properties.
+                Over 300 satisfied clients trust us to help them make calm, clear property decisions.
               </p>
             </div>
           </div>

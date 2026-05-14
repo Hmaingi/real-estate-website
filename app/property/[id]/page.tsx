@@ -1,8 +1,10 @@
-import { notFound } from 'next/navigation';
+"use client";
+
 import PropertyCarousel from '@/components/PropertyCarousel';
 import ContactForm from '@/components/ContactForm';
 import { MapPin, Bed, Bath, Square, Home, Calendar } from 'lucide-react';
-import properties from '@/data/properties.json';
+import Link from 'next/link';
+import { useProperties } from '@/hooks/useProperties';
 
 interface PropertyPageProps {
   params: {
@@ -12,10 +14,24 @@ interface PropertyPageProps {
 
 export default function PropertyPage({ params }: PropertyPageProps) {
   const propertyId = parseInt(params.id);
+  const { properties, isLoaded } = useProperties();
   const property = properties.find(p => p.id === propertyId);
 
   if (!property) {
-    notFound();
+    return (
+      <div className="min-h-screen bg-slate-50 pt-20 flex items-center justify-center px-4">
+        <div className="bg-white rounded-lg shadow-lg p-8 text-center max-w-md">
+          <h1 className="text-2xl font-bold text-slate-900 mb-3">
+            {isLoaded ? "Property not found" : "Loading property..."}
+          </h1>
+          {isLoaded && (
+            <Link href="/listings" className="text-emerald-700 hover:text-emerald-800 font-semibold">
+              Back to listings
+            </Link>
+          )}
+        </div>
+      </div>
+    );
   }
 
   const features = [
@@ -47,7 +63,7 @@ export default function PropertyPage({ params }: PropertyPageProps) {
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
-                  <span className="text-3xl lg:text-4xl font-bold text-amber-600">
+                  <span className="text-3xl lg:text-4xl font-bold text-emerald-700">
                     {property.price}
                   </span>
                   <span className={`px-4 py-2 rounded-full text-sm font-medium ${
@@ -64,7 +80,7 @@ export default function PropertyPage({ params }: PropertyPageProps) {
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 {features.map((feature, index) => (
                   <div key={index} className="text-center p-4 bg-slate-50 rounded-xl">
-                    <feature.icon className="h-8 w-8 text-amber-500 mx-auto mb-2" />
+                    <feature.icon className="h-8 w-8 text-emerald-600 mx-auto mb-2" />
                     <div className="text-2xl font-bold text-slate-800 mb-1">
                       {feature.value}
                     </div>
@@ -93,27 +109,27 @@ export default function PropertyPage({ params }: PropertyPageProps) {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-emerald-600 rounded-full"></div>
                   <span className="text-slate-700">Modern Kitchen</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-emerald-600 rounded-full"></div>
                   <span className="text-slate-700">Secure Parking</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-emerald-600 rounded-full"></div>
                   <span className="text-slate-700">24/7 Security</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-emerald-600 rounded-full"></div>
                   <span className="text-slate-700">Garden/Balcony</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-emerald-600 rounded-full"></div>
                   <span className="text-slate-700">Swimming Pool Access</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-emerald-600 rounded-full"></div>
                   <span className="text-slate-700">Gym Facilities</span>
                 </div>
               </div>
@@ -155,7 +171,7 @@ export default function PropertyPage({ params }: PropertyPageProps) {
             </div>
 
             {/* Contact Info */}
-            <div className="bg-amber-50 rounded-2xl p-8 border border-amber-200">
+            <div className="bg-emerald-50 rounded-2xl p-8 border border-emerald-200">
               <h3 className="text-xl font-semibold text-slate-800 mb-4">
                 Need More Information?
               </h3>
@@ -164,13 +180,13 @@ export default function PropertyPage({ params }: PropertyPageProps) {
               </p>
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
-                  <div className="bg-amber-500 p-2 rounded-lg">
+                  <div className="bg-emerald-600 p-2 rounded-lg">
                     <Calendar className="h-4 w-4 text-white" />
                   </div>
                   <span className="text-slate-700">Schedule a Viewing</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <div className="bg-amber-500 p-2 rounded-lg">
+                  <div className="bg-emerald-600 p-2 rounded-lg">
                     <MapPin className="h-4 w-4 text-white" />
                   </div>
                   <span className="text-slate-700">Property Location Tour</span>

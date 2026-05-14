@@ -1,48 +1,42 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import SearchBar, { SearchFilters } from "@/components/SearchBar";
 import PropertyCard from "@/components/PropertyCard";
 import { Filter, Grid, List } from "lucide-react";
-import properties from "@/data/properties.json";
+import { useProperties } from "@/hooks/useProperties";
 
-interface Property {
-  id: number;
-  title: string;
-  location: string;
-  price: string;
-  numericPrice: number;
+interface SearchFilters {
+  query: string;
   type: string;
-  bedrooms: number;
-  bathrooms: number;
-  area: string;
-  images: string[];
-  description: string;
+  location: string;
+  priceRange: string;
+  bedrooms: string;
 }
 
 export default function ListingsPage() {
   const searchParams = useSearchParams();
-  const [filteredProperties, setFilteredProperties] = useState<Property[]>(properties);
+  const { properties } = useProperties();
+  const [filteredProperties, setFilteredProperties] = useState(properties);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [sortBy, setSortBy] = useState("featured");
 
   // Filters from URL
   const [filters, setFilters] = useState<SearchFilters>({
-    query: searchParams.get("query") || "",
-    type: searchParams.get("type") || "",
-    location: searchParams.get("location") || "",
-    priceRange: searchParams.get("priceRange") || "",
-    bedrooms: searchParams.get("bedrooms") || ""
+    query: searchParams?.get("query") || "",
+    type: searchParams?.get("type") || "",
+    location: searchParams?.get("location") || "",
+    priceRange: searchParams?.get("priceRange") || "",
+    bedrooms: searchParams?.get("bedrooms") || ""
   });
 
   // Update filters whenever URL params change
   useEffect(() => {
     setFilters({
-      query: searchParams.get("query") || "",
-      type: searchParams.get("type") || "",
-      location: searchParams.get("location") || "",
-      priceRange: searchParams.get("priceRange") || "",
-      bedrooms: searchParams.get("bedrooms") || ""
+      query: searchParams?.get("query") || "",
+      type: searchParams?.get("type") || "",
+      location: searchParams?.get("location") || "",
+      priceRange: searchParams?.get("priceRange") || "",
+      bedrooms: searchParams?.get("bedrooms") || ""
     });
   }, [searchParams]);
 
@@ -98,11 +92,7 @@ export default function ListingsPage() {
     }
 
     setFilteredProperties(result);
-  }, [filters, sortBy]);
-
-  const handleSearch = (newFilters: SearchFilters) => {
-    setFilters(newFilters);
-  };
+  }, [filters, properties, sortBy]);
 
   return (
     <div className="min-h-screen bg-slate-50 pt-20">
@@ -114,17 +104,16 @@ export default function ListingsPage() {
               ? "Properties for Sale"
               : filters.type === "Rent"
               ? "Properties for Rent"
+              : filters.type === "Rent-to-own"
+              ? "Rent-to-own Homes"
+              : filters.type === "Auction"
+              ? "Auction Properties"
               : "Property Listings"}
           </h1>
           <p className="text-xl text-slate-600">
             Discover your perfect home from our extensive collection of premium
             properties
           </p>
-        </div>
-
-        {/* Search Bar */}
-        <div className="mb-12">
-          <SearchBar onSearch={handleSearch} />
         </div>
 
         {/* Results Header */}
@@ -148,7 +137,7 @@ export default function ListingsPage() {
                     bedrooms: ""
                   })
                 }
-                className="text-amber-600 hover:text-amber-700 font-medium"
+                className="text-emerald-700 hover:text-emerald-800 font-medium"
               >
                 Clear filters
               </button>
@@ -160,7 +149,7 @@ export default function ListingsPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+              className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             >
               <option value="featured">Featured</option>
               <option value="price-low">Price: Low to High</option>
@@ -174,7 +163,7 @@ export default function ListingsPage() {
                 onClick={() => setViewMode("grid")}
                 className={`p-2 ${
                   viewMode === "grid"
-                    ? "bg-amber-500 text-white"
+                    ? "bg-emerald-600 text-white"
                     : "bg-white text-slate-600 hover:bg-slate-50"
                 }`}
               >
@@ -184,7 +173,7 @@ export default function ListingsPage() {
                 onClick={() => setViewMode("list")}
                 className={`p-2 ${
                   viewMode === "list"
-                    ? "bg-amber-500 text-white"
+                    ? "bg-emerald-600 text-white"
                     : "bg-white text-slate-600 hover:bg-slate-50"
                 }`}
               >
@@ -226,7 +215,7 @@ export default function ListingsPage() {
                   bedrooms: ""
                 })
               }
-              className="bg-amber-500 hover:bg-amber-600 text-white font-medium px-6 py-3 rounded-lg transition-colors"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-6 py-3 rounded-lg transition-colors"
             >
               Clear All Filters
             </button>

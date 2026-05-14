@@ -6,17 +6,17 @@ export default function ContactPage() {
     {
       icon: MapPin,
       title: 'Our Office',
-      details: ['Westlands Business Center', 'Waiyaki Way, Nairobi', 'Kenya']
+      details: ['Athi River', 'Mombasa Road', 'Kenya']
     },
     {
       icon: Phone,
       title: 'Phone Numbers',
-      details: ['+254 700 123 456', '+254 711 987 654']
+      details: ['+254 768 809 923']
     },
     {
       icon: Mail,
       title: 'Email Addresses',
-      details: ['info@Graceful Properties.co.ke', 'sales@Graceful Properties.co.ke']
+      details: ['info@gracefulproperties.co.ke', 'sales@gracefulproperties.co.ke']
     },
     {
       icon: Clock,
@@ -63,7 +63,7 @@ export default function ContactPage() {
               {contactInfo.map((item, index) => (
                 <div key={index} className="bg-white rounded-2xl p-6 shadow-lg">
                   <div className="flex items-center mb-4">
-                    <div className="bg-amber-500 p-3 rounded-lg mr-4">
+                    <div className="bg-emerald-600 p-3 rounded-lg mr-4">
                       <item.icon className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="text-xl font-semibold text-slate-800">
@@ -90,8 +90,8 @@ export default function ContactPage() {
                 <div className="text-center text-slate-500">
                   <MapPin className="h-12 w-12 mx-auto mb-2" />
                   <p>Interactive Map</p>
-                  <p className="text-sm">Westlands Business Center</p>
-                  <p className="text-sm">Waiyaki Way, Nairobi</p>
+                  <p className="text-sm">Athi River</p>
+                  <p className="text-sm">Mombasa Road</p>
                 </div>
               </div>
             </div>
@@ -136,8 +136,8 @@ export default function ContactPage() {
                 What areas do you cover?
               </h3>
               <p className="text-slate-600">
-                We specialize in prime locations across Nairobi including Karen, Westlands, 
-                Kilimani, Lavington, Runda, and the Central Business District.
+                We support residential property clients across Athi River, Mombasa Road, 
+                Nairobi, and surrounding growth areas.
               </p>
             </div>
 

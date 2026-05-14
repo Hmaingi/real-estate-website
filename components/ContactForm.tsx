@@ -74,7 +74,7 @@ export default function ContactForm({ propertyTitle, className = '' }: ContactFo
             value={formData.name}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
             placeholder="Enter your full name"
           />
         </div>
@@ -91,7 +91,7 @@ export default function ContactForm({ propertyTitle, className = '' }: ContactFo
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
             placeholder="Enter your email"
           />
         </div>
@@ -107,7 +107,7 @@ export default function ContactForm({ propertyTitle, className = '' }: ContactFo
             name="phone"
             value={formData.phone}
             onChange={handleChange}
-            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
             placeholder="Enter your phone number"
           />
         </div>
@@ -124,7 +124,7 @@ export default function ContactForm({ propertyTitle, className = '' }: ContactFo
             onChange={handleChange}
             required
             rows={4}
-            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all resize-none"
+            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all resize-none"
             placeholder="Tell us about your requirements..."
           />
         </div>
@@ -132,7 +132,7 @@ export default function ContactForm({ propertyTitle, className = '' }: ContactFo
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center space-x-2"
+          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center space-x-2"
         >
           <Send className="h-5 w-5" />
           <span>Send Message</span>

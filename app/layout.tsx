@@ -7,13 +7,14 @@ import Footer from '@/components/Footer';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://gracefulproperties.co.ke'),
   title: 'Graceful Properties - Luxury Properties in Nairobi | Real Estate',
   description: 'Discover luxury properties, modern apartments, and exclusive homes in Nairobi\'s most prestigious neighborhoods. Your trusted real estate partner since 2009.',
   keywords: 'real estate Nairobi, luxury properties Kenya, apartments for rent Nairobi, houses for sale Kenya, property investment',
   authors: [{ name: 'Graceful Properties' }],
   openGraph: {
     title: 'Graceful Properties - Luxury Properties in Nairobi',
-    description: 'Find your dream home with Kenya\'s premier real estate agency. Luxury properties in Karen, Westlands, Kilimani and more.',
+    description: 'Find your dream home with Graceful Properties. Residential properties around Athi River, Mombasa Road, Nairobi and surrounding areas.',
     type: 'website',
     locale: 'en_KE',
   },
@@ -26,6 +27,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className={inter.className}>
         <Header />
         <main>{children}</main>

@@ -3,18 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { MapPin, Bed, Bath, Square, ChevronLeft, ChevronRight } from 'lucide-react';
-
-interface Property {
-  id: number;
-  title: string;
-  location: string;
-  price: string;
-  type: string;
-  bedrooms: number;
-  bathrooms: number;
-  area: string;
-  images: string[];
-}
+import { Property } from '@/lib/properties';
 
 interface PropertyCardProps {
   property: Property;
@@ -67,8 +56,8 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         <div className="absolute top-4 left-4">
           <span className={`px-3 py-1 rounded-full text-sm font-medium ${
             property.type === 'Rent' 
-              ? 'bg-blue-500 text-white' 
-              : 'bg-green-500 text-white'
+              ? 'bg-slate-900 text-white' 
+              : 'bg-emerald-600 text-white'
           }`}>
             For {property.type}
           </span>
@@ -117,7 +106,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         </div>
 
         <div className="flex items-center justify-between mb-4">
-          <span className="text-2xl font-bold text-amber-600">
+          <span className="text-2xl font-bold text-emerald-700">
             {property.price}
           </span>
         </div>
