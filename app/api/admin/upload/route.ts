@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
   const bucket = process.env.SUPABASE_STORAGE_BUCKET || "property-images";
   const safeName = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, "-");
-  const path = `${Date.now()}-${safeName}`;
+  const path = `${Date.now()}-${crypto.randomUUID()}-${safeName}`;
   const url = `${process.env.SUPABASE_URL}/storage/v1/object/${bucket}/${path}`;
   const body = await file.arrayBuffer();
 
@@ -39,8 +39,9 @@ export async function POST(request: Request) {
   });
 
   if (!upload.ok) {
+    const error = await upload.text();
     return NextResponse.json(
-      { message: "Image upload failed." },
+      { message: `Image upload failed for ${file.name}. ${error}` },
       { status: upload.status }
     );
   }
@@ -49,4 +50,3 @@ export async function POST(request: Request) {
     url: `${process.env.SUPABASE_URL}/storage/v1/object/public/${bucket}/${path}`
   });
 }
-

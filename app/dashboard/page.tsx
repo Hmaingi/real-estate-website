@@ -1,9 +1,9 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, DragEvent, FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, ImagePlus, LogOut, Pencil, Plus, Save, Trash2, X } from "lucide-react";
+import { GripVertical, ImagePlus, LogOut, Pencil, Plus, Save, Trash2, X } from "lucide-react";
 import { useProperties } from "@/hooks/useProperties";
 import { Property } from "@/lib/properties";
 
@@ -21,6 +21,50 @@ const emptyForm: Property = {
   description: ""
 };
 
+async function compressImageFile(file: File) {
+  if (!file.type.startsWith("image/")) return file;
+
+  const imageUrl = URL.createObjectURL(file);
+
+  try {
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new window.Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = imageUrl;
+    });
+
+    const maxSize = 1800;
+    const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+    const width = Math.max(1, Math.round(image.width * scale));
+    const height = Math.max(1, Math.round(image.height * scale));
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+
+    const context = canvas.getContext("2d");
+    if (!context) return file;
+
+    context.drawImage(image, 0, 0, width, height);
+
+    const blob = await new Promise<Blob | null>((resolve) => {
+      canvas.toBlob(resolve, "image/jpeg", 0.82);
+    });
+
+    if (!blob) return file;
+
+    return new File(
+      [blob],
+      file.name.replace(/\.[^.]+$/, ".jpg"),
+      { type: "image/jpeg" }
+    );
+  } catch {
+    return file;
+  } finally {
+    URL.revokeObjectURL(imageUrl);
+  }
+}
+
 export default function DashboardPage() {
   const router = useRouter();
   const { properties, setProperties, isLoaded } = useProperties();
@@ -28,6 +72,12 @@ export default function DashboardPage() {
   const [imageUrl, setImageUrl] = useState("");
   const [message, setMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingImages, setIsUploadingImages] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState("");
+  const [draggedImageIndex, setDraggedImageIndex] = useState<number | null>(null);
+  const imageListRef = useRef<HTMLDivElement | null>(null);
+  const dragPointerYRef = useRef(0);
+  const autoScrollFrameRef = useRef<number | null>(null);
   const isEditing = form.id !== 0;
 
   useEffect(() => {
@@ -38,6 +88,14 @@ export default function DashboardPage() {
       })
       .catch(() => router.replace("/admin/login"));
   }, [router]);
+
+  useEffect(() => {
+    return () => {
+      if (autoScrollFrameRef.current) {
+        cancelAnimationFrame(autoScrollFrameRef.current);
+      }
+    };
+  }, []);
 
   const updateField = (field: keyof Property, value: string | number) => {
     setForm((current) => ({ ...current, [field]: value }));
@@ -52,22 +110,53 @@ export default function DashboardPage() {
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     event.target.value = "";
+    if (!files.length) return;
 
-    for (const file of files) {
-      const formData = new FormData();
-      formData.append("file", file);
-      const response = await fetch("/api/admin/upload", {
-        method: "POST",
-        body: formData
-      });
-      const data = await response.json().catch(() => ({}));
+    try {
+      setIsUploadingImages(true);
+      setMessage("");
+      const uploadedUrls: string[] = [];
+      const failedUploads: string[] = [];
 
-      if (!response.ok) {
-        setMessage(data.message || "Image upload failed. Check Supabase Storage setup.");
+      for (let index = 0; index < files.length; index += 1) {
+        const file = files[index];
+        setUploadProgress(`Preparing image ${index + 1} of ${files.length}: ${file.name}`);
+        const uploadFile = await compressImageFile(file);
+        const formData = new FormData();
+        formData.append("file", uploadFile);
+
+        setUploadProgress(`Uploading image ${index + 1} of ${files.length}: ${file.name}`);
+        const response = await fetch("/api/admin/upload", {
+          method: "POST",
+          body: formData
+        });
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          failedUploads.push(data.message || `${file.name} failed to upload.`);
+          continue;
+        }
+
+        uploadedUrls.push(data.url);
+      }
+
+      if (uploadedUrls.length) {
+        setForm((current) => ({ ...current, images: [...current.images, ...uploadedUrls] }));
+      }
+
+      if (failedUploads.length) {
+        setMessage(
+          `${uploadedUrls.length} image(s) uploaded. ${failedUploads.length} failed: ${failedUploads.join(" ")}`
+        );
         return;
       }
 
-      setForm((current) => ({ ...current, images: [...current.images, data.url] }));
+      setMessage(`${uploadedUrls.length} image(s) uploaded. You can now drag them into the order you want.`);
+    } catch (error) {
+      setMessage("Image upload stopped because the browser could not reach the upload server. Try fewer images at once or smaller photos.");
+    } finally {
+      setIsUploadingImages(false);
+      setUploadProgress("");
     }
   };
 
@@ -78,17 +167,80 @@ export default function DashboardPage() {
     }));
   };
 
-  const moveImage = (index: number, direction: -1 | 1) => {
+  const moveImageTo = (fromIndex: number, toIndex: number) => {
     setForm((current) => {
-      const nextIndex = index + direction;
-      if (nextIndex < 0 || nextIndex >= current.images.length) return current;
+      if (
+        fromIndex === toIndex ||
+        fromIndex < 0 ||
+        toIndex < 0 ||
+        fromIndex >= current.images.length ||
+        toIndex >= current.images.length
+      ) {
+        return current;
+      }
 
       const images = [...current.images];
-      const [image] = images.splice(index, 1);
-      images.splice(nextIndex, 0, image);
+      const [image] = images.splice(fromIndex, 1);
+      images.splice(toIndex, 0, image);
 
       return { ...current, images };
     });
+  };
+
+  const handleImageDrop = (event: DragEvent<HTMLDivElement>, dropIndex: number) => {
+    event.preventDefault();
+    if (draggedImageIndex === null) return;
+    moveImageTo(draggedImageIndex, dropIndex);
+    stopImageAutoScroll();
+    setDraggedImageIndex(null);
+  };
+
+  const stopImageAutoScroll = () => {
+    if (autoScrollFrameRef.current) {
+      cancelAnimationFrame(autoScrollFrameRef.current);
+      autoScrollFrameRef.current = null;
+    }
+  };
+
+  const runImageAutoScroll = () => {
+    const list = imageListRef.current;
+    if (!list || draggedImageIndex === null) {
+      stopImageAutoScroll();
+      return;
+    }
+
+    const bounds = list.getBoundingClientRect();
+    const edgeSize = 88;
+    const maxSpeed = 22;
+    const pointerY = dragPointerYRef.current;
+    let scrollAmount = 0;
+
+    if (pointerY < bounds.top + edgeSize) {
+      const intensity = (bounds.top + edgeSize - pointerY) / edgeSize;
+      scrollAmount = -Math.ceil(maxSpeed * Math.min(1, intensity));
+    }
+
+    if (pointerY > bounds.bottom - edgeSize) {
+      const intensity = (pointerY - (bounds.bottom - edgeSize)) / edgeSize;
+      scrollAmount = Math.ceil(maxSpeed * Math.min(1, intensity));
+    }
+
+    if (scrollAmount !== 0) {
+      list.scrollTop += scrollAmount;
+    }
+
+    autoScrollFrameRef.current = requestAnimationFrame(runImageAutoScroll);
+  };
+
+  const startImageAutoScroll = () => {
+    if (autoScrollFrameRef.current) return;
+    autoScrollFrameRef.current = requestAnimationFrame(runImageAutoScroll);
+  };
+
+  const handleImageDragOver = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    dragPointerYRef.current = event.clientY;
+    startImageAutoScroll();
   };
 
   const resetForm = () => {
@@ -222,40 +374,56 @@ export default function DashboardPage() {
                 </div>
                 <label className="flex items-center justify-center gap-2 border border-dashed border-emerald-400 bg-emerald-50 text-emerald-800 rounded-lg px-4 py-3 cursor-pointer hover:bg-emerald-100">
                   <ImagePlus className="h-5 w-5" />
-                  <span>Upload images</span>
-                  <input type="file" accept="image/*" multiple onChange={handleFileUpload} className="hidden" />
+                  <span>{isUploadingImages ? "Uploading..." : "Upload images"}</span>
+                  <input type="file" accept="image/*" multiple onChange={handleFileUpload} className="hidden" disabled={isUploadingImages} />
                 </label>
+                {uploadProgress && (
+                  <p className="mt-3 text-sm text-slate-600">{uploadProgress}</p>
+                )}
                 {form.images.length > 0 && (
-                  <div className="grid grid-cols-3 gap-3 mt-4">
+                  <div
+                    ref={imageListRef}
+                    onDragOver={handleImageDragOver}
+                    className="space-y-3 mt-4 max-h-[420px] overflow-y-auto pr-2"
+                  >
                     {form.images.map((image, index) => (
-                      <div key={`${image}-${index}`} className="relative aspect-square rounded-lg overflow-hidden bg-slate-100 group">
-                        <Image src={image} alt={`Property image ${index + 1}`} fill className="object-cover" />
-                        <div className="absolute left-1 top-1 bg-slate-950/80 text-white text-xs font-semibold px-2 py-1 rounded">
-                          {index + 1}
+                      <div
+                        key={`${image}-${index}`}
+                        draggable
+                        onDragStart={(event) => {
+                          dragPointerYRef.current = event.clientY;
+                          setDraggedImageIndex(index);
+                          startImageAutoScroll();
+                        }}
+                        onDragOver={handleImageDragOver}
+                        onDrop={(event) => handleImageDrop(event, index)}
+                        onDragEnd={() => {
+                          stopImageAutoScroll();
+                          setDraggedImageIndex(null);
+                        }}
+                        className={`flex items-center gap-3 rounded-lg border p-2 cursor-grab active:cursor-grabbing transition-colors ${
+                          draggedImageIndex === index
+                            ? "border-emerald-500 bg-emerald-50"
+                            : "border-slate-200 bg-slate-50"
+                        }`}
+                      >
+                        <GripVertical className="h-5 w-5 text-slate-400 flex-shrink-0" />
+                        <div className="relative h-20 w-20 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
+                          <Image src={image} alt={`Property image ${index + 1}`} fill className="object-cover" />
                         </div>
-                        <div className="absolute inset-x-1 bottom-1 flex items-center justify-between gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                          <button
-                            type="button"
-                            onClick={() => moveImage(index, -1)}
-                            disabled={index === 0}
-                            className="bg-slate-950/80 disabled:bg-slate-400/70 text-white p-1 rounded"
-                            aria-label="Move image left"
-                          >
-                            <ArrowLeft className="h-4 w-4" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => moveImage(index, 1)}
-                            disabled={index === form.images.length - 1}
-                            className="bg-slate-950/80 disabled:bg-slate-400/70 text-white p-1 rounded"
-                            aria-label="Move image right"
-                          >
-                            <ArrowRight className="h-4 w-4" />
+                        <div className="min-w-0 flex-1">
+                          <div className="text-sm font-semibold text-slate-800">
+                            Image {index + 1}{index === 0 ? " - cover photo" : ""}
+                          </div>
+                          <div className="text-xs text-slate-500 truncate">
+                            Drag this row to change the photo order.
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <button type="button" onClick={() => removeImage(index)} className="p-2 rounded-md border border-red-200 text-red-600 hover:bg-red-50" aria-label="Remove image">
+                            <X className="h-4 w-4" />
                           </button>
                         </div>
-                        <button type="button" onClick={() => removeImage(index)} className="absolute top-1 right-1 bg-slate-950/80 text-white p-1 rounded" aria-label="Remove image">
-                          <X className="h-4 w-4" />
-                        </button>
                       </div>
                     ))}
                   </div>
