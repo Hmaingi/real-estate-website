@@ -37,7 +37,7 @@ export default function PropertyPage({ params }: PropertyPageProps) {
   const features = [
     { icon: Bed, label: 'Bedrooms', value: property.bedrooms },
     { icon: Bath, label: 'Bathrooms', value: property.bathrooms },
-    { icon: Square, label: 'Area', value: property.area },
+    ...(property.area ? [{ icon: Square, label: 'Area', value: property.area }] : []),
     { icon: Home, label: 'Type', value: `For ${property.type}` },
   ];
 
@@ -163,10 +163,12 @@ export default function PropertyPage({ params }: PropertyPageProps) {
                   <span className="text-slate-600">Bathrooms</span>
                   <span className="font-medium text-slate-800">{property.bathrooms}</span>
                 </div>
-                <div className="flex justify-between items-center py-3">
-                  <span className="text-slate-600">Area</span>
-                  <span className="font-medium text-slate-800">{property.area}</span>
-                </div>
+                {property.area && (
+                  <div className="flex justify-between items-center py-3">
+                    <span className="text-slate-600">Area</span>
+                    <span className="font-medium text-slate-800">{property.area}</span>
+                  </div>
+                )}
               </div>
             </div>
 

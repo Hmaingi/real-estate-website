@@ -30,7 +30,7 @@ create table if not exists properties (
   type text not null check (type in ('Rent', 'Sale', 'Rent-to-own', 'Auction')),
   bedrooms integer not null default 0,
   bathrooms integer not null default 0,
-  area text not null,
+  area text,
   images jsonb not null default '[]'::jsonb,
   description text not null,
   created_at timestamptz not null default now()
@@ -43,6 +43,47 @@ Create a public storage bucket named `property-images`.
 
 The dashboard uploads image files into that bucket and stores their public URLs on each property.
 
+If you already created the table with `area` required, run this once:
+
+```sql
+alter table properties alter column area drop not null;
+```
+
+If your table was created manually and the dashboard says it cannot find `numeric_price`,
+run this repair SQL:
+
+```sql
+alter table properties add column if not exists numeric_price numeric not null default 0;
+alter table properties add column if not exists images jsonb not null default '[]'::jsonb;
+alter table properties add column if not exists created_at timestamptz not null default now();
+alter table properties alter column area drop not null;
+```
+
+If creating a property says `malformed array literal: "Auction"`, the `type` column
+was created as an array by mistake. Run this:
+
+```sql
+do $$
+begin
+  if exists (
+    select 1
+    from information_schema.columns
+    where table_name = 'properties'
+      and column_name = 'type'
+      and data_type = 'ARRAY'
+  ) then
+    execute 'alter table properties alter column type type text using coalesce(type[1], ''Rent'')';
+  end if;
+end $$;
+
+alter table properties drop constraint if exists properties_type_check;
+alter table properties
+  add constraint properties_type_check
+  check (type in ('Rent', 'Sale', 'Rent-to-own', 'Auction'));
+
+notify pgrst, 'reload schema';
+```
+
 ## How Admin Login Works
 
 1. Open `/dashboard`.
@@ -50,4 +91,3 @@ The dashboard uploads image files into that bucket and stores their public URLs 
 3. Enter the password from `ADMIN_PASSWORD`.
 4. Add, edit, delete, and upload property images.
 5. Click `Log Out` when done.
-

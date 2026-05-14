@@ -3,7 +3,7 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ImagePlus, LogOut, Pencil, Plus, Save, Trash2, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ImagePlus, LogOut, Pencil, Plus, Save, Trash2, X } from "lucide-react";
 import { useProperties } from "@/hooks/useProperties";
 import { Property } from "@/lib/properties";
 
@@ -78,6 +78,19 @@ export default function DashboardPage() {
     }));
   };
 
+  const moveImage = (index: number, direction: -1 | 1) => {
+    setForm((current) => {
+      const nextIndex = index + direction;
+      if (nextIndex < 0 || nextIndex >= current.images.length) return current;
+
+      const images = [...current.images];
+      const [image] = images.splice(index, 1);
+      images.splice(nextIndex, 0, image);
+
+      return { ...current, images };
+    });
+  };
+
   const resetForm = () => {
     setForm(emptyForm);
     setImageUrl("");
@@ -110,6 +123,7 @@ export default function DashboardPage() {
       numericPrice: Number(form.numericPrice),
       bedrooms: Number(form.bedrooms),
       bathrooms: Number(form.bathrooms),
+      area: form.area.trim(),
       images: form.images.length
         ? form.images
         : ["https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg?auto=compress&cs=tinysrgb&w=800"]
@@ -194,7 +208,7 @@ export default function DashboardPage() {
               <div className="grid grid-cols-3 gap-3">
                 <input required type="number" min={0} value={form.bedrooms} onChange={(e) => updateField("bedrooms", Number(e.target.value))} placeholder="Beds" className="px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" />
                 <input required type="number" min={0} value={form.bathrooms} onChange={(e) => updateField("bathrooms", Number(e.target.value))} placeholder="Baths" className="px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" />
-                <input required value={form.area} onChange={(e) => updateField("area", e.target.value)} placeholder="Area" className="px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" />
+                <input value={form.area} onChange={(e) => updateField("area", e.target.value)} placeholder="Area (optional)" className="px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" />
               </div>
               <textarea required rows={4} value={form.description} onChange={(e) => updateField("description", e.target.value)} placeholder="Description" className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none" />
 
@@ -214,9 +228,32 @@ export default function DashboardPage() {
                 {form.images.length > 0 && (
                   <div className="grid grid-cols-3 gap-3 mt-4">
                     {form.images.map((image, index) => (
-                      <div key={`${image}-${index}`} className="relative aspect-square rounded-lg overflow-hidden bg-slate-100">
-                        <Image src={image} alt="" fill className="object-cover" />
-                        <button type="button" onClick={() => removeImage(index)} className="absolute top-1 right-1 bg-slate-950/80 text-white p-1 rounded">
+                      <div key={`${image}-${index}`} className="relative aspect-square rounded-lg overflow-hidden bg-slate-100 group">
+                        <Image src={image} alt={`Property image ${index + 1}`} fill className="object-cover" />
+                        <div className="absolute left-1 top-1 bg-slate-950/80 text-white text-xs font-semibold px-2 py-1 rounded">
+                          {index + 1}
+                        </div>
+                        <div className="absolute inset-x-1 bottom-1 flex items-center justify-between gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                          <button
+                            type="button"
+                            onClick={() => moveImage(index, -1)}
+                            disabled={index === 0}
+                            className="bg-slate-950/80 disabled:bg-slate-400/70 text-white p-1 rounded"
+                            aria-label="Move image left"
+                          >
+                            <ArrowLeft className="h-4 w-4" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => moveImage(index, 1)}
+                            disabled={index === form.images.length - 1}
+                            className="bg-slate-950/80 disabled:bg-slate-400/70 text-white p-1 rounded"
+                            aria-label="Move image right"
+                          >
+                            <ArrowRight className="h-4 w-4" />
+                          </button>
+                        </div>
+                        <button type="button" onClick={() => removeImage(index)} className="absolute top-1 right-1 bg-slate-950/80 text-white p-1 rounded" aria-label="Remove image">
                           <X className="h-4 w-4" />
                         </button>
                       </div>
@@ -268,4 +305,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-

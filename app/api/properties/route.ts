@@ -60,8 +60,9 @@ export async function POST(request: Request) {
   });
 
   if (!response.ok) {
+    const error = await response.text();
     return NextResponse.json(
-      { message: "Could not create property." },
+      { message: `Could not create property. ${error}` },
       { status: response.status }
     );
   }
@@ -69,4 +70,3 @@ export async function POST(request: Request) {
   const [created] = await response.json();
   return NextResponse.json({ property: fromDatabaseProperty(created) });
 }
-

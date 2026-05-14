@@ -39,8 +39,9 @@ export async function PATCH(request: Request, { params }: RouteContext) {
   });
 
   if (!response.ok) {
+    const error = await response.text();
     return NextResponse.json(
-      { message: "Could not update property." },
+      { message: `Could not update property. ${error}` },
       { status: response.status }
     );
   }
@@ -67,12 +68,12 @@ export async function DELETE(_request: Request, { params }: RouteContext) {
   });
 
   if (!response.ok) {
+    const error = await response.text();
     return NextResponse.json(
-      { message: "Could not delete property." },
+      { message: `Could not delete property. ${error}` },
       { status: response.status }
     );
   }
 
   return NextResponse.json({ ok: true });
 }
-

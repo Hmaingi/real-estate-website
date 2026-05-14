@@ -121,10 +121,12 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             <Bath className="h-4 w-4 mr-1" />
             <span>{property.bathrooms} bath</span>
           </div>
-          <div className="flex items-center">
-            <Square className="h-4 w-4 mr-1" />
-            <span>{property.area}</span>
-          </div>
+          {property.area && (
+            <div className="flex items-center">
+              <Square className="h-4 w-4 mr-1" />
+              <span>{property.area}</span>
+            </div>
+          )}
         </div>
 
         <Link

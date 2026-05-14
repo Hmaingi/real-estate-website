@@ -28,7 +28,7 @@ export function fromDatabaseProperty(property: Record<string, any>): Property {
     type: property.type,
     bedrooms: Number(property.bedrooms),
     bathrooms: Number(property.bathrooms),
-    area: property.area,
+    area: property.area || "",
     images: Array.isArray(property.images) ? property.images : [],
     description: property.description
   };
@@ -43,7 +43,7 @@ export function toDatabaseProperty(property: Omit<Property, "id"> | Property) {
     type: property.type,
     bedrooms: Number(property.bedrooms),
     bathrooms: Number(property.bathrooms),
-    area: property.area,
+    area: property.area?.trim() || null,
     images: property.images,
     description: property.description
   };
