@@ -1,9 +1,10 @@
 interface BrandWordmarkProps {
   className?: string;
   uppercase?: boolean;
+  children?: React.ReactNode;
 }
 
-export default function BrandWordmark({ className = "", uppercase = false }: BrandWordmarkProps) {
+export default function BrandWordmark({ className = "", uppercase = false, children }: BrandWordmarkProps) {
   return (
     <span
       className={`font-normal leading-none text-[#0D1F2D] whitespace-nowrap ${className}`}
@@ -16,8 +17,7 @@ export default function BrandWordmark({ className = "", uppercase = false }: Bra
           "0 0 1px rgba(13, 31, 45, 0.18), 0 0 4px rgba(16, 185, 129, 0.24), 0 0 10px rgba(16, 185, 129, 0.12)"
       }}
     >
-      {uppercase ? "GRACEFUL PROPERTIES" : "Graceful Properties"}
+      {children || (uppercase ? "GRACEFUL PROPERTIES" : "Graceful Properties")}
     </span>
   );
 }
-

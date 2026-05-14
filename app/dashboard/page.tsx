@@ -71,6 +71,7 @@ export default function DashboardPage() {
   const [form, setForm] = useState<Property>(emptyForm);
   const [imageUrl, setImageUrl] = useState("");
   const [message, setMessage] = useState("");
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingImages, setIsUploadingImages] = useState(false);
   const [uploadProgress, setUploadProgress] = useState("");
@@ -84,7 +85,12 @@ export default function DashboardPage() {
     fetch("/api/admin/me")
       .then((response) => response.json())
       .then((data) => {
-        if (!data.authenticated) router.replace("/admin/login");
+        if (!data.authenticated) {
+          router.replace("/admin/login");
+          return;
+        }
+
+        setIsCheckingAuth(false);
       })
       .catch(() => router.replace("/admin/login"));
   }, [router]);
@@ -308,6 +314,17 @@ export default function DashboardPage() {
     await fetch("/api/admin/logout", { method: "POST" });
     router.replace("/admin/login");
   };
+
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen bg-slate-50 pt-20 flex items-center justify-center px-4">
+        <div className="bg-white rounded-lg shadow-lg border border-slate-200 p-8 text-center">
+          <h1 className="text-2xl font-bold text-slate-900 mb-2">Checking access</h1>
+          <p className="text-slate-600">Please wait while we verify your admin session.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 pt-20">
