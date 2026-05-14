@@ -15,7 +15,7 @@ interface SearchFilters {
 
 export default function ListingsPage() {
   const searchParams = useSearchParams();
-  const { properties } = useProperties();
+  const { properties, isLoaded } = useProperties();
   const [filteredProperties, setFilteredProperties] = useState(properties);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [sortBy, setSortBy] = useState("featured");
@@ -116,12 +116,24 @@ export default function ListingsPage() {
           </p>
         </div>
 
-        {/* Results Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-8 space-y-4 sm:space-y-0">
-          <div className="flex items-center space-x-4">
-            <span className="text-slate-700 font-medium">
-              {filteredProperties.length} properties found
-            </span>
+        {!isLoaded ? (
+          <div className="text-center py-20">
+            <div className="mx-auto mb-6 h-12 w-12 rounded-full border-4 border-emerald-200 border-t-emerald-600 animate-spin"></div>
+            <h3 className="text-2xl font-semibold text-slate-800 mb-2">
+              Loading properties
+            </h3>
+            <p className="text-slate-600">
+              Please wait while we fetch the latest listings.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Results Header */}
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-8 space-y-4 sm:space-y-0">
+              <div className="flex items-center space-x-4">
+                <span className="text-slate-700 font-medium">
+                  {filteredProperties.length} properties found
+                </span>
             {(filters.query ||
               filters.type ||
               filters.location ||
@@ -142,9 +154,9 @@ export default function ListingsPage() {
                 Clear filters
               </button>
             )}
-          </div>
+              </div>
 
-          <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-4">
             {/* Sort Dropdown */}
             <select
               value={sortBy}
@@ -180,46 +192,48 @@ export default function ListingsPage() {
                 <List className="h-5 w-5" />
               </button>
             </div>
-          </div>
-        </div>
+              </div>
+            </div>
 
-        {/* Property Grid */}
-        {filteredProperties.length > 0 ? (
-          <div
-            className={`grid gap-8 ${
-              viewMode === "grid"
-                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-                : "grid-cols-1"
-            }`}
-          >
-            {filteredProperties.map((property) => (
-              <PropertyCard key={property.id} property={property} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-20">
-            <Filter className="h-16 w-16 text-slate-400 mx-auto mb-6" />
-            <h3 className="text-2xl font-semibold text-slate-800 mb-4">
-              No properties found
-            </h3>
-            <p className="text-slate-600 mb-8">
-              Try adjusting your search criteria to find more properties.
-            </p>
-            <button
-              onClick={() =>
-                setFilters({
-                  query: "",
-                  type: "",
-                  location: "",
-                  priceRange: "",
-                  bedrooms: ""
-                })
-              }
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-6 py-3 rounded-lg transition-colors"
-            >
-              Clear All Filters
-            </button>
-          </div>
+            {/* Property Grid */}
+            {filteredProperties.length > 0 ? (
+              <div
+                className={`grid gap-8 ${
+                  viewMode === "grid"
+                    ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                    : "grid-cols-1"
+                }`}
+              >
+                {filteredProperties.map((property) => (
+                  <PropertyCard key={property.id} property={property} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-20">
+                <Filter className="h-16 w-16 text-slate-400 mx-auto mb-6" />
+                <h3 className="text-2xl font-semibold text-slate-800 mb-4">
+                  No properties found
+                </h3>
+                <p className="text-slate-600 mb-8">
+                  Try adjusting your search criteria to find more properties.
+                </p>
+                <button
+                  onClick={() =>
+                    setFilters({
+                      query: "",
+                      type: "",
+                      location: "",
+                      priceRange: "",
+                      bedrooms: ""
+                    })
+                  }
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-6 py-3 rounded-lg transition-colors"
+                >
+                  Clear All Filters
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

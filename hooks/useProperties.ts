@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from "react";
 import {
-  defaultPropertyList,
   Property
 } from "@/lib/properties";
 
 export function useProperties() {
-  const [properties, setProperties] = useState<Property[]>(defaultPropertyList);
+  const [properties, setProperties] = useState<Property[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -18,7 +17,7 @@ export function useProperties() {
           setProperties(data.properties);
         }
       })
-      .catch(() => setProperties(defaultPropertyList))
+      .catch(() => setProperties([]))
       .finally(() => setIsLoaded(true));
   }, []);
 
