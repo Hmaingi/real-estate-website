@@ -11,6 +11,8 @@ export interface Property {
   bathrooms: number;
   area: string;
   images: string[];
+  videoUrl?: string;
+  featured?: boolean;
   description: string;
 }
 
@@ -30,6 +32,8 @@ export function fromDatabaseProperty(property: Record<string, any>): Property {
     bathrooms: Number(property.bathrooms),
     area: property.area || "",
     images: Array.isArray(property.images) ? property.images : [],
+    videoUrl: property.video_url || "",
+    featured: Boolean(property.featured),
     description: property.description
   };
 }
@@ -45,6 +49,8 @@ export function toDatabaseProperty(property: Omit<Property, "id"> | Property) {
     bathrooms: Number(property.bathrooms),
     area: property.area?.trim() || null,
     images: property.images,
+    video_url: property.videoUrl?.trim() || null,
+    featured: Boolean(property.featured),
     description: property.description
   };
 }

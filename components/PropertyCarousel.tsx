@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import ImageWatermark from './ImageWatermark';
 
 interface PropertyCarouselProps {
   images: string[];
@@ -34,13 +35,14 @@ export default function PropertyCarousel({ images, title }: PropertyCarouselProp
   return (
     <div className="space-y-4">
       {/* Main Image */}
-      <div className="relative h-96 lg:h-[500px] rounded-2xl overflow-hidden bg-slate-200">
+      <div className="relative h-[500px] overflow-hidden bg-slate-200 sm:h-[620px] lg:h-[760px]">
         {!imageError[currentIndex] ? (
           <Image
             src={images[currentIndex]}
             alt={`${title} - Image ${currentIndex + 1}`}
             fill
-            className="object-cover cursor-pointer"
+            className="cursor-pointer object-cover"
+            sizes="(min-width: 1024px) 960px, 100vw"
             onClick={() => setIsModalOpen(true)}
             onError={() => handleImageError(currentIndex)}
           />
@@ -53,36 +55,43 @@ export default function PropertyCarousel({ images, title }: PropertyCarouselProp
           </div>
         )}
 
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/30 via-transparent to-transparent" />
+        <ImageWatermark className="absolute bottom-8 right-8 text-6xl sm:text-7xl" />
+
         {/* Navigation Arrows */}
-        <button
-          onClick={prevImage}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all"
-        >
-          <ChevronLeft className="h-6 w-6" />
-        </button>
-        <button
-          onClick={nextImage}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all"
-        >
-          <ChevronRight className="h-6 w-6" />
-        </button>
+        {images.length > 1 && (
+          <>
+            <button
+              onClick={prevImage}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-slate-950/55 hover:bg-slate-950/75 text-white p-3 rounded-full transition-all"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+            <button
+              onClick={nextImage}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-slate-950/55 hover:bg-slate-950/75 text-white p-3 rounded-full transition-all"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
+          </>
+        )}
 
         {/* Image Counter */}
-        <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+        <div className="absolute bottom-4 right-4 bg-slate-950/60 text-white px-3 py-1 rounded-full text-sm">
           {currentIndex + 1} / {images.length}
         </div>
       </div>
 
       {/* Thumbnail Gallery */}
-      <div className="grid grid-cols-4 lg:grid-cols-6 gap-2">
+      <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
         {images.map((image, index) => (
           <button
             key={index}
             onClick={() => goToImage(index)}
-            className={`relative h-20 rounded-lg overflow-hidden ${
+            className={`relative h-28 overflow-hidden transition ${
               index === currentIndex 
-                ? 'ring-2 ring-amber-500 ring-offset-2' 
-                : 'hover:opacity-80'
+                ? 'ring-2 ring-emerald-700 ring-offset-2' 
+                : 'opacity-75 hover:opacity-100'
             }`}
           >
             {!imageError[index] ? (
@@ -91,6 +100,7 @@ export default function PropertyCarousel({ images, title }: PropertyCarouselProp
                 alt={`${title} - Thumbnail ${index + 1}`}
                 fill
                 className="object-cover"
+                sizes="(min-width: 1024px) 160px, 33vw"
                 onError={() => handleImageError(index)}
               />
             ) : (
@@ -107,21 +117,24 @@ export default function PropertyCarousel({ images, title }: PropertyCarouselProp
         <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4">
           <button
             onClick={() => setIsModalOpen(false)}
-            className="absolute top-4 right-4 text-white hover:text-amber-500 transition-colors z-10"
+            className="absolute top-4 right-4 text-white hover:text-emerald-300 transition-colors z-10"
           >
             <X className="h-8 w-8" />
           </button>
 
-          <div className="relative max-w-4xl max-h-full">
+          <div className="relative max-w-6xl max-h-full">
             {!imageError[currentIndex] ? (
-              <Image
-                src={images[currentIndex]}
-                alt={`${title} - Full size ${currentIndex + 1}`}
-                width={1200}
-                height={800}
-                className="max-w-full max-h-full object-contain"
-                onError={() => handleImageError(currentIndex)}
-              />
+              <div className="relative">
+                <Image
+                  src={images[currentIndex]}
+                  alt={`${title} - Full size ${currentIndex + 1}`}
+                  width={1600}
+                  height={1000}
+                  className="max-w-full max-h-[86vh] object-contain"
+                  onError={() => handleImageError(currentIndex)}
+                />
+                <ImageWatermark className="absolute bottom-6 right-6 text-6xl" />
+              </div>
             ) : (
               <div className="w-96 h-64 bg-slate-200 flex items-center justify-center rounded-lg">
                 <div className="text-slate-400 text-center">

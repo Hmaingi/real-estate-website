@@ -32,6 +32,8 @@ create table if not exists properties (
   bathrooms integer not null default 0,
   area text,
   images jsonb not null default '[]'::jsonb,
+  video_url text,
+  featured boolean not null default false,
   description text not null,
   created_at timestamptz not null default now()
 );
@@ -55,6 +57,8 @@ run this repair SQL:
 ```sql
 alter table properties add column if not exists numeric_price numeric not null default 0;
 alter table properties add column if not exists images jsonb not null default '[]'::jsonb;
+alter table properties add column if not exists video_url text;
+alter table properties add column if not exists featured boolean not null default false;
 alter table properties add column if not exists created_at timestamptz not null default now();
 alter table properties alter column area drop not null;
 ```

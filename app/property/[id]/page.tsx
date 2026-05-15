@@ -5,6 +5,7 @@ import ContactForm from '@/components/ContactForm';
 import { MapPin, Bed, Bath, Square, Home, Calendar } from 'lucide-react';
 import Link from 'next/link';
 import { useProperties } from '@/hooks/useProperties';
+import PropertyVideo from '@/components/PropertyVideo';
 
 interface PropertyPageProps {
   params: {
@@ -43,12 +44,15 @@ export default function PropertyPage({ params }: PropertyPageProps) {
 
   return (
     <div className="min-h-screen bg-slate-50 pt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="mx-auto max-w-[1480px] px-4 py-12 sm:px-6 lg:px-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Property Images */}
-            <PropertyCarousel images={property.images} title={property.title} />
+            {property.images.length > 0 ? (
+              <PropertyCarousel images={property.images} title={property.title} />
+            ) : property.videoUrl ? (
+              <PropertyVideo title={property.title} videoUrl={property.videoUrl} />
+            ) : null}
 
             {/* Property Details */}
             <div className="bg-white rounded-2xl shadow-lg p-8">
@@ -101,6 +105,15 @@ export default function PropertyPage({ params }: PropertyPageProps) {
                 </p>
               </div>
             </div>
+
+            {property.images.length > 0 && property.videoUrl && (
+              <div className="bg-white rounded-2xl shadow-lg p-8">
+                <h2 className="text-2xl font-semibold text-slate-800 mb-6">
+                  Property Video
+                </h2>
+                <PropertyVideo title={property.title} videoUrl={property.videoUrl} />
+              </div>
+            )}
 
             {/* Additional Features */}
             <div className="bg-white rounded-2xl shadow-lg p-8">

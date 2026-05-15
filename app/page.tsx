@@ -2,8 +2,13 @@
 import { ArrowRight, Award, Users, Home, Star, KeyRound } from 'lucide-react';
 import Link from 'next/link';
 import BrandWordmark from '@/components/BrandWordmark';
+import PropertyCard from '@/components/PropertyCard';
+import { useProperties } from '@/hooks/useProperties';
 
 export default function HomePage() {
+  const { properties, isLoaded } = useProperties();
+  const featuredProperties = properties.filter((property) => property.featured).slice(0, 3);
+
   const stats = [
     { icon: Home, value: '250+', label: 'Properties Listed' },
     { icon: Users, value: '300+', label: 'Happy Clients' },
@@ -59,7 +64,7 @@ export default function HomePage() {
 
       {/* Stats Section */}
       <section className="py-20 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[1480px] px-4 sm:px-6 lg:px-10">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
@@ -89,6 +94,14 @@ export default function HomePage() {
               Discover our handpicked selection of premium properties that define luxury living.
             </p>
           </div>
+
+          {isLoaded && featuredProperties.length > 0 && (
+            <div className="grid grid-cols-1 gap-8 mb-12 lg:grid-cols-2 lg:gap-10">
+              {featuredProperties.map((property) => (
+                <PropertyCard key={property.id} property={property} />
+              ))}
+            </div>
+          )}
 
           <div className="text-center">
             <Link

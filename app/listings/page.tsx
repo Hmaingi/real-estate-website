@@ -96,7 +96,7 @@ export default function ListingsPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 pt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="mx-auto max-w-[1480px] px-4 sm:px-6 lg:px-10 py-12">
         {/* Page Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl lg:text-5xl font-bold text-slate-800 mb-4">
@@ -198,9 +198,9 @@ export default function ListingsPage() {
             {/* Property Grid */}
             {filteredProperties.length > 0 ? (
               <div
-                className={`grid gap-8 ${
+                className={`grid gap-8 lg:gap-10 ${
                   viewMode === "grid"
-                    ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                    ? "grid-cols-1 lg:grid-cols-2"
                     : "grid-cols-1"
                 }`}
               >

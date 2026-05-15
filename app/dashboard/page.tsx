@@ -3,7 +3,7 @@
 import { ChangeEvent, DragEvent, FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { GripVertical, ImagePlus, LogOut, Pencil, Plus, Save, Trash2, X } from "lucide-react";
+import { GripVertical, ImagePlus, LogOut, Pencil, Play, Plus, Save, Trash2, X } from "lucide-react";
 import { useProperties } from "@/hooks/useProperties";
 import { Property } from "@/lib/properties";
 
@@ -18,6 +18,8 @@ const emptyForm: Property = {
   bathrooms: 1,
   area: "",
   images: [],
+  videoUrl: "",
+  featured: false,
   description: ""
 };
 
@@ -103,7 +105,7 @@ export default function DashboardPage() {
     };
   }, []);
 
-  const updateField = (field: keyof Property, value: string | number) => {
+  const updateField = (field: keyof Property, value: string | number | boolean) => {
     setForm((current) => ({ ...current, [field]: value }));
   };
 
@@ -381,6 +383,18 @@ export default function DashboardPage() {
               </div>
               <textarea required rows={4} value={form.description} onChange={(e) => updateField("description", e.target.value)} placeholder="Description" className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none" />
 
+              <input value={form.videoUrl || ""} onChange={(e) => updateField("videoUrl", e.target.value)} placeholder="Video URL (YouTube or MP4, optional)" className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" />
+
+              <label className="flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-slate-800">
+                <input
+                  type="checkbox"
+                  checked={Boolean(form.featured)}
+                  onChange={(e) => updateField("featured", e.target.checked)}
+                  className="h-4 w-4 accent-emerald-600"
+                />
+                <span className="font-medium">Feature this property on the homepage</span>
+              </label>
+
               <div className="border border-slate-200 rounded-lg p-4">
                 <label className="block text-sm font-semibold text-slate-700 mb-3">Property Images</label>
                 <div className="flex gap-2 mb-3">
@@ -463,12 +477,28 @@ export default function DashboardPage() {
               {properties.map((property) => (
                 <div key={property.id} className="p-5 flex flex-col md:flex-row gap-4 md:items-center">
                   <div className="relative h-28 w-full md:w-40 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
-                    <Image src={property.images[0]} alt={property.title} fill className="object-cover" />
+                    {property.images[0] ? (
+                      <Image src={property.images[0]} alt={property.title} fill className="object-cover" />
+                    ) : property.videoUrl ? (
+                      <div className="flex h-full w-full items-center justify-center bg-slate-950 text-white">
+                        <Play className="h-8 w-8 fill-current" />
+                      </div>
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-slate-400">
+                        No media
+                      </div>
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap gap-2 mb-2">
                       <span className="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2 py-1 rounded-full">For {property.type}</span>
                       <span className="bg-slate-100 text-slate-700 text-xs font-semibold px-2 py-1 rounded-full">{property.images.length} images</span>
+                      {property.videoUrl && (
+                        <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full">Video</span>
+                      )}
+                      {property.featured && (
+                        <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded-full">Featured</span>
+                      )}
                     </div>
                     <h3 className="text-lg font-semibold text-slate-900">{property.title}</h3>
                     <p className="text-slate-600">{property.location} - {property.price}</p>
